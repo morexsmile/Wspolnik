@@ -1,0 +1,764 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Wspólnik – aplikacja do zarządzania zadaniami, projektami i współpracą zespołową. Wszystko, czego potrzebuje Twój zespół, w jednym miejscu.">
+
+    <meta name="theme-color" content="#F5F7FB">
+
+    <title>Wspólnik — Zarządzanie pracą zespołu</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/index.css">
+
+    <!-- JavaScript -->
+    <script src="js/index.js" defer></script>
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- ========================================
+             SIDEBAR
+        ========================================= -->
+
+        <aside class="sidebar" id="sidebar">
+
+            <div class="sidebar-header">
+
+                <a href="#dashboard" class="brand">
+                    <span class="brand-icon">
+                        <i class="fa-solid fa-handshake"></i>
+                    </span>
+                    <span class="brand-name">wspólnik<span>.</span></span>
+                </a>
+
+                <button class="sidebar-close" id="sidebarClose" aria-label="Zamknij menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+            <div class="workspace-selector">
+
+                <div class="workspace-avatar">W</div>
+
+                <div class="workspace-info">
+                    <span class="workspace-label">Przestrzeń robocza</span>
+                    <strong>Studio Kreatywne</strong>
+                </div>
+
+                <i class="fa-solid fa-chevron-down"></i>
+
+            </div>
+
+            <nav class="sidebar-navigation" aria-label="Menu główne">
+
+                <span class="nav-section-title">MENU GŁÓWNE</span>
+
+                <a href="#dashboard" class="nav-link active">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Przegląd</span>
+                </a>
+
+                <a href="#projects" class="nav-link">
+                    <i class="fa-solid fa-folder"></i>
+                    <span>Projekty</span>
+                    <span class="nav-count">5</span>
+                </a>
+
+                <a href="#tasks" class="nav-link">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>Moje zadania</span>
+                    <span class="nav-count">8</span>
+                </a>
+
+                <a href="#calendar" class="nav-link">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Kalendarz</span>
+                </a>
+
+                <a href="#team" class="nav-link">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Zespół</span>
+                </a>
+
+                <span class="nav-section-title nav-section-spaced">PRZESTRZEŃ ROBOCZA</span>
+
+                <a href="#messages" class="nav-link">
+                    <i class="fa-regular fa-comments"></i>
+                    <span>Wiadomości</span>
+                    <span class="notification-dot"></span>
+                </a>
+
+                <a href="#files" class="nav-link">
+                    <i class="fa-regular fa-folder-open"></i>
+                    <span>Pliki</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <div class="upgrade-card">
+                    <div class="upgrade-icon">
+                        <i class="fa-solid fa-rocket"></i>
+                    </div>
+
+                    <strong>Rozwijaj swój zespół</strong>
+
+                    <p>Odkryj możliwości lepszej organizacji pracy.</p>
+
+                    <a href="#upgrade">Poznaj możliwości <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+
+                <a href="#settings" class="nav-link">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Ustawienia</span>
+                </a>
+
+                <div class="sidebar-user">
+
+                    <div class="user-avatar">MK</div>
+
+                    <div class="user-info">
+                        <strong>Maria Kowalska</strong>
+                        <span>Administrator</span>
+                    </div>
+
+                    <button class="user-menu-button" aria-label="Menu użytkownika">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ========================================
+             MAIN CONTENT
+        ========================================= -->
+
+        <main class="main-content" id="dashboard">
+
+            <!-- TOPBAR -->
+
+            <header class="topbar">
+
+                <div class="topbar-left">
+
+                    <button class="mobile-menu-button" id="mobileMenuButton" aria-label="Otwórz menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+
+                    <div class="breadcrumb">
+                        <span>Przestrzeń robocza</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <strong>Przegląd</strong>
+                    </div>
+
+                </div>
+
+                <div class="topbar-right">
+
+                    <label class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="search" placeholder="Szukaj..." aria-label="Szukaj">
+                        <kbd>⌘ K</kbd>
+                    </label>
+
+                    <button class="icon-button notification-button" aria-label="Powiadomienia">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notification-indicator"></span>
+                    </button>
+
+                    <div class="topbar-divider"></div>
+
+                    <button class="topbar-profile" aria-label="Profil użytkownika">
+                        <div class="user-avatar">MK</div>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- DASHBOARD -->
+
+            <div class="dashboard-content">
+
+                <!-- PAGE HEADING -->
+
+                <section class="welcome-section">
+
+                    <div>
+                        <span class="welcome-date">
+                            <i class="fa-regular fa-calendar"></i>
+                            Poniedziałek, 17 listopada 2026
+                        </span>
+
+                        <h1>Dzień dobry, Mario! <span>👋</span></h1>
+
+                        <p>Oto podsumowanie tego, co dzieje się w Twoim zespole.</p>
+                    </div>
+
+                    <div class="welcome-actions">
+
+                        <button class="btn btn-secondary" id="inviteMemberButton">
+                            <i class="fa-solid fa-user-plus"></i>
+                            Zaproś osobę
+                        </button>
+
+                        <button class="btn btn-primary" id="newTaskButton">
+                            <i class="fa-solid fa-plus"></i>
+                            Nowe zadanie
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- STATISTICS -->
+
+                <section class="stats-grid" aria-label="Statystyki zespołu">
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-top">
+                            <span>Wszystkie zadania</span>
+                            <div class="stat-icon stat-icon-blue">
+                                <i class="fa-solid fa-list-check"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-value">128</div>
+
+                        <div class="stat-footer">
+                            <span class="stat-positive">
+                                <i class="fa-solid fa-arrow-up"></i> 12%
+                            </span>
+                            <span>w porównaniu z poprzednim miesiącem</span>
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-top">
+                            <span>W trakcie realizacji</span>
+                            <div class="stat-icon stat-icon-purple">
+                                <i class="fa-solid fa-spinner"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-value">24</div>
+
+                        <div class="stat-footer">
+                            <span class="stat-neutral">Aktywne</span>
+                            <span>zadania zespołu</span>
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-top">
+                            <span>Ukończone zadania</span>
+                            <div class="stat-icon stat-icon-green">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-value">89</div>
+
+                        <div class="stat-footer">
+                            <span class="stat-positive">
+                                <i class="fa-solid fa-arrow-up"></i> 18%
+                            </span>
+                            <span>ukończonych w tym miesiącu</span>
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-top">
+                            <span>Do wykonania</span>
+                            <div class="stat-icon stat-icon-orange">
+                                <i class="fa-regular fa-clock"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-value">15</div>
+
+                        <div class="stat-footer">
+                            <span class="stat-warning">Wymaga uwagi</span>
+                            <span>zbliżające się terminy</span>
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- DASHBOARD MAIN GRID -->
+
+                <div class="dashboard-grid">
+
+                    <div class="dashboard-main-column">
+
+                        <!-- PROJECTS -->
+
+                        <section class="content-card projects-section" id="projects">
+
+                            <div class="section-heading">
+
+                                <div>
+                                    <h2>Twoje projekty</h2>
+                                    <p>Śledź postępy najważniejszych projektów.</p>
+                                </div>
+
+                                <a href="#all-projects" class="text-link">
+                                    Wszystkie projekty
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+
+                            </div>
+
+
+                            <div class="projects-list">
+
+                                <article class="project-item">
+
+                                    <div class="project-color project-color-purple">
+                                        <i class="fa-solid fa-palette"></i>
+                                    </div>
+
+                                    <div class="project-details">
+                                        <h3>Redesign strony internetowej</h3>
+                                        <span>Projektowanie · 6 zadań</span>
+
+                                        <div class="project-progress">
+                                            <div class="progress-track">
+                                                <div class="progress-fill progress-purple" style="width: 75%"></div>
+                                            </div>
+                                            <span>75%</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="project-members">
+                                        <div class="avatar avatar-one">AK</div>
+                                        <div class="avatar avatar-two">PW</div>
+                                        <div class="avatar avatar-three">MK</div>
+                                    </div>
+
+                                    <span class="status-badge status-progress">W trakcie</span>
+
+                                </article>
+
+
+                                <article class="project-item">
+
+                                    <div class="project-color project-color-blue">
+                                        <i class="fa-solid fa-mobile-screen-button"></i>
+                                    </div>
+
+                                    <div class="project-details">
+                                        <h3>Aplikacja mobilna</h3>
+                                        <span>Development · 12 zadań</span>
+
+                                        <div class="project-progress">
+                                            <div class="progress-track">
+                                                <div class="progress-fill progress-blue" style="width: 45%"></div>
+                                            </div>
+                                            <span>45%</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="project-members">
+                                        <div class="avatar avatar-four">JK</div>
+                                        <div class="avatar avatar-five">TN</div>
+                                        <div class="avatar avatar-six">AK</div>
+                                    </div>
+
+                                    <span class="status-badge status-progress">W trakcie</span>
+
+                                </article>
+
+
+                                <article class="project-item">
+
+                                    <div class="project-color project-color-green">
+                                        <i class="fa-solid fa-bullhorn"></i>
+                                    </div>
+
+                                    <div class="project-details">
+                                        <h3>Kampania marketingowa</h3>
+                                        <span>Marketing · 8 zadań</span>
+
+                                        <div class="project-progress">
+                                            <div class="progress-track">
+                                                <div class="progress-fill progress-green" style="width: 100%"></div>
+                                            </div>
+                                            <span>100%</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="project-members">
+                                        <div class="avatar avatar-one">AK</div>
+                                        <div class="avatar avatar-three">MK</div>
+                                    </div>
+
+                                    <span class="status-badge status-completed">Ukończony</span>
+
+                                </article>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- TASKS -->
+
+                        <section class="content-card tasks-section" id="tasks">
+
+                            <div class="section-heading">
+
+                                <div>
+                                    <h2>Moje zadania</h2>
+                                    <p>Najważniejsze zadania wymagające Twojej uwagi.</p>
+                                </div>
+
+                                <a href="#all-tasks" class="text-link">
+                                    Wszystkie zadania
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+
+                            </div>
+
+
+                            <div class="tasks-table-wrapper">
+
+                                <table class="tasks-table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Zadanie</th>
+                                            <th>Projekt</th>
+                                            <th>Priorytet</th>
+                                            <th>Termin</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td>
+                                                <div class="task-name">
+                                                    <span class="task-checkbox"></span>
+                                                    <strong>Przygotować makiety strony</strong>
+                                                </div>
+                                            </td>
+                                            <td>Redesign strony</td>
+                                            <td><span class="priority priority-high">Wysoki</span></td>
+                                            <td>19 lis</td>
+                                            <td><span class="task-status status-progress">W trakcie</span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <div class="task-name">
+                                                    <span class="task-checkbox"></span>
+                                                    <strong>Spotkanie z klientem</strong>
+                                                </div>
+                                            </td>
+                                            <td>Aplikacja mobilna</td>
+                                            <td><span class="priority priority-medium">Średni</span></td>
+                                            <td>20 lis</td>
+                                            <td><span class="task-status status-todo">Do zrobienia</span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <div class="task-name">
+                                                    <span class="task-checkbox"></span>
+                                                    <strong>Przygotować raport miesięczny</strong>
+                                                </div>
+                                            </td>
+                                            <td>Marketing</td>
+                                            <td><span class="priority priority-low">Niski</span></td>
+                                            <td>22 lis</td>
+                                            <td><span class="task-status status-todo">Do zrobienia</span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <div class="task-name">
+                                                    <span class="task-checkbox"></span>
+                                                    <strong>Opublikować nową kampanię</strong>
+                                                </div>
+                                            </td>
+                                            <td>Marketing</td>
+                                            <td><span class="priority priority-high">Wysoki</span></td>
+                                            <td>24 lis</td>
+                                            <td><span class="task-status status-completed">Ukończone</span></td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </section>
+
+                    </div>
+
+
+                    <!-- RIGHT COLUMN -->
+
+                    <aside class="dashboard-side-column">
+
+                        <!-- CALENDAR -->
+
+                        <section class="content-card calendar-section" id="calendar">
+
+                            <div class="section-heading">
+                                <div>
+                                    <h2>Nadchodzące terminy</h2>
+                                    <p>Najbliższe wydarzenia i zadania.</p>
+                                </div>
+
+                                <button class="more-button" aria-label="Więcej opcji">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                            </div>
+
+
+                            <div class="calendar-event">
+
+                                <div class="event-date">
+                                    <span>LIS</span>
+                                    <strong>19</strong>
+                                </div>
+
+                                <div class="event-details">
+                                    <strong>Makiety strony</strong>
+                                    <span><i class="fa-regular fa-clock"></i> 10:00</span>
+                                </div>
+
+                                <span class="event-dot event-dot-purple"></span>
+
+                            </div>
+
+
+                            <div class="calendar-event">
+
+                                <div class="event-date">
+                                    <span>LIS</span>
+                                    <strong>20</strong>
+                                </div>
+
+                                <div class="event-details">
+                                    <strong>Spotkanie z klientem</strong>
+                                    <span><i class="fa-regular fa-clock"></i> 12:30</span>
+                                </div>
+
+                                <span class="event-dot event-dot-blue"></span>
+
+                            </div>
+
+
+                            <div class="calendar-event">
+
+                                <div class="event-date">
+                                    <span>LIS</span>
+                                    <strong>22</strong>
+                                </div>
+
+                                <div class="event-details">
+                                    <strong>Raport miesięczny</strong>
+                                    <span><i class="fa-regular fa-clock"></i> 16:00</span>
+                                </div>
+
+                                <span class="event-dot event-dot-orange"></span>
+
+                            </div>
+
+
+                            <a href="#full-calendar" class="calendar-link">
+                                Zobacz cały kalendarz
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+
+                        </section>
+
+
+                        <!-- TEAM -->
+
+                        <section class="content-card team-section" id="team">
+
+                            <div class="section-heading">
+
+                                <div>
+                                    <h2>Twój zespół</h2>
+                                    <p>6 osób w przestrzeni roboczej.</p>
+                                </div>
+
+                                <button class="more-button" aria-label="Więcej opcji">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+
+                            </div>
+
+
+                            <div class="team-member">
+
+                                <div class="avatar avatar-one">AK</div>
+
+                                <div class="member-info">
+                                    <strong>Anna Kowalczyk</strong>
+                                    <span>Projektantka UX/UI</span>
+                                </div>
+
+                                <span class="member-online"></span>
+
+                            </div>
+
+
+                            <div class="team-member">
+
+                                <div class="avatar avatar-two">PW</div>
+
+                                <div class="member-info">
+                                    <strong>Piotr Wiśniewski</strong>
+                                    <span>Programista</span>
+                                </div>
+
+                                <span class="member-online"></span>
+
+                            </div>
+
+
+                            <div class="team-member">
+
+                                <div class="avatar avatar-four">JK</div>
+
+                                <div class="member-info">
+                                    <strong>Julia Kamińska</strong>
+                                    <span>Marketing</span>
+                                </div>
+
+                                <span class="member-offline"></span>
+
+                            </div>
+
+
+                            <div class="team-member">
+
+                                <div class="avatar avatar-five">TN</div>
+
+                                <div class="member-info">
+                                    <strong>Tomasz Nowak</strong>
+                                    <span>Programista</span>
+                                </div>
+
+                                <span class="member-online"></span>
+
+                            </div>
+
+
+                            <a href="#all-team" class="team-link">
+                                Zobacz cały zespół
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+
+                        </section>
+
+
+                        <!-- PRODUCTIVITY -->
+
+                        <section class="content-card productivity-card">
+
+                            <div class="section-heading">
+                                <div>
+                                    <h2>Produktywność zespołu</h2>
+                                    <p>Wyniki w tym miesiącu.</p>
+                                </div>
+                            </div>
+
+                            <div class="productivity-chart">
+
+                                <div class="productivity-value">
+                                    <strong>84%</strong>
+                                    <span class="stat-positive">
+                                        <i class="fa-solid fa-arrow-up"></i> 8%
+                                    </span>
+                                </div>
+
+                                <div class="productivity-progress">
+                                    <div class="productivity-progress-fill"></div>
+                                </div>
+
+                                <span class="productivity-caption">
+                                    Średni poziom realizacji zadań
+                                </span>
+
+                            </div>
+
+                        </section>
+
+                    </aside>
+
+                </div>
+
+
+                <!-- FOOTER -->
+
+                <footer class="dashboard-footer">
+
+                    <span>© 2026 Wspólnik. Wszystkie prawa zastrzeżone.</span>
+
+                    <div class="footer-links">
+                        <a href="#help">Pomoc</a>
+                        <a href="#privacy">Prywatność</a>
+                        <a href="#terms">Regulamin</a>
+                    </div>
+
+                    <span class="footer-made">
+                        Stworzone z <i class="fa-solid fa-heart"></i> dla zespołów
+                    </span>
+
+                </footer>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
