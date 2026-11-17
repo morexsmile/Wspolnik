@@ -60,24 +60,181 @@ document.addEventListener("DOMContentLoaded", () => {
        NAVIGATION
     ===================================== */
 
-    const navigationLinks = document.querySelectorAll(
-        ".sidebar-navigation .nav-link"
-    );
+  
+/* =====================================
+   NAVIGATION — SINGLE PAGE VIEWS
+===================================== */
 
-    navigationLinks.forEach(link => {
+const dashboardContent = document.querySelector(".dashboard-content");
+const topbar = document.querySelector(".topbar");
+const breadcrumbTitle = document.querySelector(".breadcrumb strong");
 
-        link.addEventListener("click", () => {
+const calendarSection = document.querySelector(".calendar-section");
 
-            navigationLinks.forEach(item => {
-                item.classList.remove("active");
+const pageView = document.createElement("div");
+pageView.className = "dashboard-content";
+pageView.id = "appPageView";
+pageView.style.display = "none";
+
+if (topbar) {
+    topbar.insertAdjacentElement("afterend", pageView);
+}
+
+const pageTitles = {
+    dashboard: "Przegląd",
+    projects: "Projekty",
+    "all-projects": "Wszystkie projekty",
+    tasks: "Moje zadania",
+    "all-tasks": "Wszystkie zadania",
+    calendar: "Kalendarz",
+    "full-calendar": "Kalendarz",
+    team: "Zespół",
+    "all-team": "Cały zespół",
+    messages: "Wiadomości",
+    files: "Pliki",
+    settings: "Ustawienia",
+    upgrade: "Rozwijaj swój zespół"
+};
+
+function createPageHeading(title, description) {
+    const heading = document.createElement("section");
+    heading.className = "welcome-section";
+
+    heading.innerHTML = `
+        <div>
+            <h1>${title}</h1>
+            <p>${description}</p>
+        </div>
+    `;
+
+    return heading;
+}
+
+function showPage(page) {
+    if (!pageTitles[page]) return;
+
+    if (page === "dashboard") {
+        pageView.style.display = "none";
+        dashboardContent.style.display = "";
+
+        if (breadcrumbTitle) {
+            breadcrumbTitle.textContent = "Przegląd";
+        }
+    } else {
+        dashboardContent.style.display = "none";
+        pageView.style.display = "";
+
+        pageView.replaceChildren();
+
+        const titles = {
+            projects: ["Projekty", "Zarządzaj projektami swojego zespołu."],
+            "all-projects": ["Wszystkie projekty", "Przeglądaj i zarządzaj wszystkimi projektami."],
+            tasks: ["Moje zadania", "Zadania przypisane do Ciebie."],
+            "all-tasks": ["Wszystkie zadania", "Zarządzaj zadaniami całego zespołu."],
+            calendar: ["Kalendarz", "Sprawdź nadchodzące terminy."],
+            "full-calendar": ["Kalendarz", "Sprawdź nadchodzące terminy."],
+            team: ["Zespół", "Poznaj członków swojej przestrzeni roboczej."],
+            "all-team": ["Cały zespół", "Zarządzaj członkami zespołu."],
+            messages: ["Wiadomości", "Komunikacja w Twoim zespole."],
+            files: ["Pliki", "Dokumenty i materiały projektowe."],
+            settings: ["Ustawienia", "Zarządzaj przestrzenią roboczą."],
+            upgrade: ["Rozwijaj swój zespół", "Poznaj możliwości Wspólnika."]
+        };
+
+        const [title, description] = titles[page];
+
+        pageView.appendChild(createPageHeading(title, description));
+
+        const sourceSections = {
+            projects: projectsList?.closest(".projects-section"),
+            "all-projects": projectsList?.closest(".projects-section"),
+            tasks: tasksTable?.closest(".tasks-section"),
+            "all-tasks": tasksTable?.closest(".tasks-section"),
+            calendar: calendarSection,
+            "full-calendar": calendarSection,
+            team: teamSection
+        };
+
+        const source = sourceSections[page];
+
+        if (source) {
+            const clone = source.cloneNode(true);
+
+            clone.removeAttribute("id");
+            clone.querySelectorAll("[id]").forEach(element => {
+                element.removeAttribute("id");
             });
 
+            pageView.appendChild(clone);
+
+            clone.querySelectorAll(".task-checkbox").forEach(checkbox => {
+                setupTaskCheckbox(checkbox);
+            });
+
+        } else {
+            const message = document.createElement("section");
+            message.className = "content-card";
+
+            message.innerHTML = `
+                <h2>${title}</h2>
+                <p>Ta sekcja zostanie rozbudowana w kolejnym etapie.</p>
+            `;
+
+            pageView.appendChild(message);
+        }
+
+        if (breadcrumbTitle) {
+            breadcrumbTitle.textContent = title;
+        }
+    }
+
+    document.querySelectorAll(".sidebar .nav-link").forEach(link => {
+        link.classList.remove("active");
+
+        const target = link.getAttribute("href")?.replace("#", "");
+
+        const activePages = {
+            projects: ["projects", "all-projects"],
+            tasks: ["tasks", "all-tasks"],
+            calendar: ["calendar", "full-calendar"],
+            team: ["team", "all-team"]
+        };
+
+        if (
+            target === page ||
+            activePages[target]?.includes(page)
+        ) {
             link.classList.add("active");
+        }
 
-            closeSidebar();
-        });
-
+        if (page === "dashboard" && target === "dashboard") {
+            link.classList.add("active");
+        }
     });
+
+    closeSidebar();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+const availablePages = Object.keys(pageTitles);
+
+document.addEventListener("click", event => {
+    const link = event.target.closest('a[href^="#"]');
+
+    if (!link) return;
+
+    const page = link.getAttribute("href").slice(1);
+
+    if (!availablePages.includes(page)) return;
+
+    event.preventDefault();
+
+    showPage(page);
+});
 
 
     /* =====================================
