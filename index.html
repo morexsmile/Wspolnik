@@ -4,12 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <meta name="description" content="Wspólnik – aplikacja do zarządzania zadaniami, projektami i współpracą zespołową. Wszystko, czego potrzebuje Twój zespół, w jednym miejscu.">
-
     <meta name="theme-color" content="#F5F7FB">
-
-    <title>Wspólnik — Zarządzanie pracą zespołu</title>
+    <title>Wspólnik | Zarządzanie pracą zespołu</title>
 
     <!-- Favicon -->
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
@@ -33,123 +30,122 @@
 
     <div class="app-container">
 
-        <!-- ========================================
-             SIDEBAR
-        ========================================= -->
+        <!-- SIDEBAR -->
 
-        <aside class="sidebar" id="sidebar">
 
-            <div class="sidebar-header">
+<aside class="sidebar" id="sidebar">
 
-                <a href="#dashboard" class="brand">
-                    <span class="brand-icon">
-                        <i class="fa-solid fa-handshake"></i>
-                    </span>
-                    <span class="brand-name">wspólnik<span>.</span></span>
-                </a>
+    <div class="sidebar-header">
+        <a href="#dashboard" class="brand" data-view="dashboard">
+            <span class="brand-icon">
+                <i class="fa-solid fa-handshake"></i>
+            </span>
+            <span class="brand-name">wspólnik<span>.</span></span>
+        </a>
 
-                <button class="sidebar-close" id="sidebarClose" aria-label="Zamknij menu">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Zamknij menu">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
 
+    <div class="workspace-selector">
+        <div class="workspace-avatar">W</div>
+
+        <div class="workspace-info">
+            <span class="workspace-label">Przestrzeń robocza</span>
+            <strong>Studio Kreatywne</strong>
+        </div>
+
+        <i class="fa-solid fa-chevron-down"></i>
+    </div>
+
+    <nav class="sidebar-navigation" aria-label="Menu główne">
+
+        <span class="nav-section-title">MENU GŁÓWNE</span>
+
+        <a href="#dashboard" class="nav-link active" data-view="dashboard">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Przegląd</span>
+        </a>
+
+        <a href="#projects" class="nav-link" data-view="projects">
+            <i class="fa-solid fa-folder"></i>
+            <span>Projekty</span>
+            <span class="nav-count">5</span>
+        </a>
+
+        <a href="#tasks" class="nav-link" data-view="tasks">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Moje zadania</span>
+            <span class="nav-count">8</span>
+        </a>
+
+        <a href="#calendar" class="nav-link" data-view="calendar">
+            <i class="fa-regular fa-calendar"></i>
+            <span>Kalendarz</span>
+        </a>
+
+        <a href="#team" class="nav-link" data-view="team">
+            <i class="fa-solid fa-users"></i>
+            <span>Zespół</span>
+        </a>
+
+        <span class="nav-section-title nav-section-spaced">PRZESTRZEŃ ROBOCZA</span>
+
+        <a href="#messages" class="nav-link" data-view="messages">
+            <i class="fa-regular fa-comments"></i>
+            <span>Wiadomości</span>
+            <span class="notification-dot"></span>
+        </a>
+
+        <a href="#files" class="nav-link" data-view="files">
+            <i class="fa-regular fa-folder-open"></i>
+            <span>Pliki</span>
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="upgrade-card">
+            <div class="upgrade-icon">
+                <i class="fa-solid fa-rocket"></i>
             </div>
 
-            <div class="workspace-selector">
+            <strong>Rozwijaj swój zespół</strong>
 
-                <div class="workspace-avatar">W</div>
+            <p>Odkryj możliwości lepszej organizacji pracy.</p>
 
-                <div class="workspace-info">
-                    <span class="workspace-label">Przestrzeń robocza</span>
-                    <strong>Studio Kreatywne</strong>
-                </div>
+            <a href="#upgrade" data-view="upgrade">
+                Poznaj możliwości
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
 
-                <i class="fa-solid fa-chevron-down"></i>
+        <a href="#settings" class="nav-link" data-view="settings">
+            <i class="fa-solid fa-gear"></i>
+            <span>Ustawienia</span>
+        </a>
 
+        <div class="sidebar-user">
+
+            <div class="user-avatar">MK</div>
+
+            <div class="user-info">
+                <strong>Maria Kowalska</strong>
+                <span>Administrator</span>
             </div>
 
-            <nav class="sidebar-navigation" aria-label="Menu główne">
+            <button class="user-menu-button" aria-label="Menu użytkownika">
+                <i class="fa-solid fa-ellipsis"></i>
+            </button>
 
-                <span class="nav-section-title">MENU GŁÓWNE</span>
+        </div>
 
-                <a href="#dashboard" class="nav-link active">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    <span>Przegląd</span>
-                </a>
+    </div>
 
-                <a href="#projects" class="nav-link">
-                    <i class="fa-solid fa-folder"></i>
-                    <span>Projekty</span>
-                    <span class="nav-count">5</span>
-                </a>
+</aside>
 
-                <a href="#tasks" class="nav-link">
-                    <i class="fa-solid fa-list-check"></i>
-                    <span>Moje zadania</span>
-                    <span class="nav-count">8</span>
-                </a>
-
-                <a href="#calendar" class="nav-link">
-                    <i class="fa-regular fa-calendar"></i>
-                    <span>Kalendarz</span>
-                </a>
-
-                <a href="#team" class="nav-link">
-                    <i class="fa-solid fa-users"></i>
-                    <span>Zespół</span>
-                </a>
-
-                <span class="nav-section-title nav-section-spaced">PRZESTRZEŃ ROBOCZA</span>
-
-                <a href="#messages" class="nav-link">
-                    <i class="fa-regular fa-comments"></i>
-                    <span>Wiadomości</span>
-                    <span class="notification-dot"></span>
-                </a>
-
-                <a href="#files" class="nav-link">
-                    <i class="fa-regular fa-folder-open"></i>
-                    <span>Pliki</span>
-                </a>
-
-            </nav>
-
-            <div class="sidebar-bottom">
-
-                <div class="upgrade-card">
-                    <div class="upgrade-icon">
-                        <i class="fa-solid fa-rocket"></i>
-                    </div>
-
-                    <strong>Rozwijaj swój zespół</strong>
-
-                    <p>Odkryj możliwości lepszej organizacji pracy.</p>
-
-                    <a href="#upgrade">Poznaj możliwości <i class="fa-solid fa-arrow-right"></i></a>
-                </div>
-
-                <a href="#settings" class="nav-link">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Ustawienia</span>
-                </a>
-
-                <div class="sidebar-user">
-
-                    <div class="user-avatar">MK</div>
-
-                    <div class="user-info">
-                        <strong>Maria Kowalska</strong>
-                        <span>Administrator</span>
-                    </div>
-
-                    <button class="user-menu-button" aria-label="Menu użytkownika">
-                        <i class="fa-solid fa-ellipsis"></i>
-                    </button>
-
-                </div>
-
-            </div>
-
-        </aside>
 
 
         <!-- ========================================
