@@ -68,7 +68,8 @@
         ].map(item => ({
             id: createId("member"),
             name: item.querySelector(".member-info strong")?.textContent.trim() || "",
-            email: item.querySelector(".member-info span")?.textContent.trim() || "",
+            role: item.querySelector(".member-info span")?.textContent.trim() || "",
+email: "",
             status: item.querySelector(".member-online") ? "online" : "offline"
         }));
 
@@ -164,7 +165,8 @@
         const newMember = {
             id: createId("member"),
             name: member.name,
-            email: member.email,
+            email: member.email || "",
+            role: member.role || "",
             status: "offline"
         };
 
