@@ -24,6 +24,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!sidebar || !tasksTable) return;
 
+    /* =====================================
+       DATA STORE
+    ===================================== */
+
+    const store = window.WspolnikStore;
+
+    if (!store) {
+        console.error("Wspólnik Store nie został uruchomiony.");
+        return;
+    }
+
 
     /* =====================================
        MOBILE SIDEBAR
@@ -57,184 +68,219 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================
-       NAVIGATION
+       NAVIGATION — SINGLE PAGE VIEWS
     ===================================== */
 
-  
-/* =====================================
-   NAVIGATION — SINGLE PAGE VIEWS
-===================================== */
+    const dashboardContent = document.querySelector(".dashboard-content");
+    const topbar = document.querySelector(".topbar");
+    const breadcrumbTitle = document.querySelector(".breadcrumb strong");
 
-const dashboardContent = document.querySelector(".dashboard-content");
-const topbar = document.querySelector(".topbar");
-const breadcrumbTitle = document.querySelector(".breadcrumb strong");
+    const calendarSection = document.querySelector(".calendar-section");
 
-const calendarSection = document.querySelector(".calendar-section");
+    const pageView = document.createElement("div");
+    pageView.className = "dashboard-content";
+    pageView.id = "appPageView";
+    pageView.style.display = "none";
 
-const pageView = document.createElement("div");
-pageView.className = "dashboard-content";
-pageView.id = "appPageView";
-pageView.style.display = "none";
-
-if (topbar) {
-    topbar.insertAdjacentElement("afterend", pageView);
-}
-
-const pageTitles = {
-    dashboard: "Przegląd",
-    projects: "Projekty",
-    "all-projects": "Wszystkie projekty",
-    tasks: "Moje zadania",
-    "all-tasks": "Wszystkie zadania",
-    calendar: "Kalendarz",
-    "full-calendar": "Kalendarz",
-    team: "Zespół",
-    "all-team": "Cały zespół",
-    messages: "Wiadomości",
-    files: "Pliki",
-    settings: "Ustawienia",
-    upgrade: "Rozwijaj swój zespół"
-};
-
-function createPageHeading(title, description) {
-    const heading = document.createElement("section");
-    heading.className = "welcome-section";
-
-    heading.innerHTML = `
-        <div>
-            <h1>${title}</h1>
-            <p>${description}</p>
-        </div>
-    `;
-
-    return heading;
-}
-
-function showPage(page) {
-    if (!pageTitles[page]) return;
-
-    if (page === "dashboard") {
-        pageView.style.display = "none";
-        dashboardContent.style.display = "";
-
-        if (breadcrumbTitle) {
-            breadcrumbTitle.textContent = "Przegląd";
-        }
-    } else {
-        dashboardContent.style.display = "none";
-        pageView.style.display = "";
-
-        pageView.replaceChildren();
-
-        const titles = {
-            projects: ["Projekty", "Zarządzaj projektami swojego zespołu."],
-            "all-projects": ["Wszystkie projekty", "Przeglądaj i zarządzaj wszystkimi projektami."],
-            tasks: ["Moje zadania", "Zadania przypisane do Ciebie."],
-            "all-tasks": ["Wszystkie zadania", "Zarządzaj zadaniami całego zespołu."],
-            calendar: ["Kalendarz", "Sprawdź nadchodzące terminy."],
-            "full-calendar": ["Kalendarz", "Sprawdź nadchodzące terminy."],
-            team: ["Zespół", "Poznaj członków swojej przestrzeni roboczej."],
-            "all-team": ["Cały zespół", "Zarządzaj członkami zespołu."],
-            messages: ["Wiadomości", "Komunikacja w Twoim zespole."],
-            files: ["Pliki", "Dokumenty i materiały projektowe."],
-            settings: ["Ustawienia", "Zarządzaj przestrzenią roboczą."],
-            upgrade: ["Rozwijaj swój zespół", "Poznaj możliwości Wspólnika."]
-        };
-
-        const [title, description] = titles[page];
-
-        pageView.appendChild(createPageHeading(title, description));
-
-        const sourceSections = {
-            projects: projectsList?.closest(".projects-section"),
-            "all-projects": projectsList?.closest(".projects-section"),
-            tasks: tasksTable?.closest(".tasks-section"),
-            "all-tasks": tasksTable?.closest(".tasks-section"),
-            calendar: calendarSection,
-            "full-calendar": calendarSection,
-            team: teamSection
-        };
-
-        const source = sourceSections[page];
-
-        if (source) {
-            const clone = source.cloneNode(true);
-
-            clone.removeAttribute("id");
-            clone.querySelectorAll("[id]").forEach(element => {
-                element.removeAttribute("id");
-            });
-
-            pageView.appendChild(clone);
-
-            clone.querySelectorAll(".task-checkbox").forEach(checkbox => {
-                setupTaskCheckbox(checkbox);
-            });
-
-        } else {
-            const message = document.createElement("section");
-            message.className = "content-card";
-
-            message.innerHTML = `
-                <h2>${title}</h2>
-                <p>Ta sekcja zostanie rozbudowana w kolejnym etapie.</p>
-            `;
-
-            pageView.appendChild(message);
-        }
-
-        if (breadcrumbTitle) {
-            breadcrumbTitle.textContent = title;
-        }
+    if (topbar) {
+        topbar.insertAdjacentElement("afterend", pageView);
     }
 
-    document.querySelectorAll(".sidebar .nav-link").forEach(link => {
-        link.classList.remove("active");
+    const pageTitles = {
+        dashboard: "Przegląd",
+        projects: "Projekty",
+        "all-projects": "Wszystkie projekty",
+        tasks: "Moje zadania",
+        "all-tasks": "Wszystkie zadania",
+        calendar: "Kalendarz",
+        "full-calendar": "Kalendarz",
+        team: "Zespół",
+        "all-team": "Cały zespół",
+        messages: "Wiadomości",
+        files: "Pliki",
+        settings: "Ustawienia",
+        upgrade: "Rozwijaj swój zespół"
+    };
 
-        const target = link.getAttribute("href")?.replace("#", "");
+    function createPageHeading(title, description) {
+        const heading = document.createElement("section");
+        heading.className = "welcome-section";
 
-        const activePages = {
-            projects: ["projects", "all-projects"],
-            tasks: ["tasks", "all-tasks"],
-            calendar: ["calendar", "full-calendar"],
-            team: ["team", "all-team"]
-        };
+        heading.innerHTML = `
+            <div>
+                <h1>${title}</h1>
+                <p>${description}</p>
+            </div>
+        `;
 
-        if (
-            target === page ||
-            activePages[target]?.includes(page)
-        ) {
-            link.classList.add("active");
+        return heading;
+    }
+
+    function showPage(page) {
+        if (!pageTitles[page]) return;
+
+        if (page === "dashboard") {
+            pageView.style.display = "none";
+            dashboardContent.style.display = "";
+
+            if (breadcrumbTitle) {
+                breadcrumbTitle.textContent = "Przegląd";
+            }
+
+        } else {
+            dashboardContent.style.display = "none";
+            pageView.style.display = "";
+
+            pageView.replaceChildren();
+
+            const titles = {
+                projects: [
+                    "Projekty",
+                    "Zarządzaj projektami swojego zespołu."
+                ],
+                "all-projects": [
+                    "Wszystkie projekty",
+                    "Przeglądaj i zarządzaj wszystkimi projektami."
+                ],
+                tasks: [
+                    "Moje zadania",
+                    "Zadania przypisane do Ciebie."
+                ],
+                "all-tasks": [
+                    "Wszystkie zadania",
+                    "Zarządzaj zadaniami całego zespołu."
+                ],
+                calendar: [
+                    "Kalendarz",
+                    "Sprawdź nadchodzące terminy."
+                ],
+                "full-calendar": [
+                    "Kalendarz",
+                    "Sprawdź nadchodzące terminy."
+                ],
+                team: [
+                    "Zespół",
+                    "Poznaj członków swojej przestrzeni roboczej."
+                ],
+                "all-team": [
+                    "Cały zespół",
+                    "Zarządzaj członkami zespołu."
+                ],
+                messages: [
+                    "Wiadomości",
+                    "Komunikacja w Twoim zespole."
+                ],
+                files: [
+                    "Pliki",
+                    "Dokumenty i materiały projektowe."
+                ],
+                settings: [
+                    "Ustawienia",
+                    "Zarządzaj przestrzenią roboczą."
+                ],
+                upgrade: [
+                    "Rozwijaj swój zespół",
+                    "Poznaj możliwości Wspólnika."
+                ]
+            };
+
+            const [title, description] = titles[page];
+
+            pageView.appendChild(
+                createPageHeading(title, description)
+            );
+
+            const sourceSections = {
+                projects: projectsList?.closest(".projects-section"),
+                "all-projects": projectsList?.closest(".projects-section"),
+                tasks: tasksTable?.closest(".tasks-section"),
+                "all-tasks": tasksTable?.closest(".tasks-section"),
+                calendar: calendarSection,
+                "full-calendar": calendarSection,
+                team: teamSection
+            };
+
+            const source = sourceSections[page];
+
+            if (source) {
+                const clone = source.cloneNode(true);
+
+                clone.removeAttribute("id");
+
+                clone.querySelectorAll("[id]").forEach(element => {
+                    element.removeAttribute("id");
+                });
+
+                pageView.appendChild(clone);
+
+                clone.querySelectorAll(".task-checkbox").forEach(checkbox => {
+                    setupTaskCheckbox(checkbox);
+                });
+
+            } else {
+                const message = document.createElement("section");
+                message.className = "content-card";
+
+                message.innerHTML = `
+                    <h2>${title}</h2>
+                    <p>Ta sekcja zostanie rozbudowana w kolejnym etapie.</p>
+                `;
+
+                pageView.appendChild(message);
+            }
+
+            if (breadcrumbTitle) {
+                breadcrumbTitle.textContent = title;
+            }
         }
 
-        if (page === "dashboard" && target === "dashboard") {
-            link.classList.add("active");
-        }
+        document.querySelectorAll(".sidebar .nav-link").forEach(link => {
+            link.classList.remove("active");
+
+            const target = link.getAttribute("href")?.replace("#", "");
+
+            const activePages = {
+                projects: ["projects", "all-projects"],
+                tasks: ["tasks", "all-tasks"],
+                calendar: ["calendar", "full-calendar"],
+                team: ["team", "all-team"]
+            };
+
+            if (
+                target === page ||
+                activePages[target]?.includes(page)
+            ) {
+                link.classList.add("active");
+            }
+
+            if (page === "dashboard" && target === "dashboard") {
+                link.classList.add("active");
+            }
+        });
+
+        closeSidebar();
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+    const availablePages = Object.keys(pageTitles);
+
+    document.addEventListener("click", event => {
+        const link = event.target.closest('a[href^="#"]');
+
+        if (!link) return;
+
+        const page = link.getAttribute("href").slice(1);
+
+        if (!availablePages.includes(page)) return;
+
+        event.preventDefault();
+
+        showPage(page);
     });
-
-    closeSidebar();
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-}
-
-const availablePages = Object.keys(pageTitles);
-
-document.addEventListener("click", event => {
-    const link = event.target.closest('a[href^="#"]');
-
-    if (!link) return;
-
-    const page = link.getAttribute("href").slice(1);
-
-    if (!availablePages.includes(page)) return;
-
-    event.preventDefault();
-
-    showPage(page);
-});
 
 
     /* =====================================
@@ -242,7 +288,6 @@ document.addEventListener("click", event => {
     ===================================== */
 
     function createDialog(title, content) {
-
         const existingDialog = document.querySelector(".app-dialog");
 
         existingDialog?.remove();
@@ -302,13 +347,12 @@ document.addEventListener("click", event => {
     ===================================== */
 
     function updateTaskCounters() {
+        const tasks = store.getState().tasks;
 
-        const rows = [...tasksTable.querySelectorAll("tr")];
+        const totalTasks = tasks.length;
 
-        const totalTasks = rows.length;
-
-        const completedTasks = rows.filter(row =>
-            row.dataset.completed === "true"
+        const completedTasks = tasks.filter(task =>
+            task.completed || task.status === "Ukończone"
         ).length;
 
         const allTasksCard = document.querySelectorAll(".stat-card")[0];
@@ -321,7 +365,6 @@ document.addEventListener("click", event => {
         if (completedCard) {
             completedCard.querySelector(".stat-value").textContent = completedTasks;
         }
-
     }
 
 
@@ -330,7 +373,6 @@ document.addEventListener("click", event => {
     ===================================== */
 
     function setupTaskCheckbox(checkbox) {
-
         const row = checkbox.closest("tr");
 
         if (!row) return;
@@ -345,18 +387,14 @@ document.addEventListener("click", event => {
         checkbox.setAttribute("aria-checked", String(isCompleted));
 
         function toggleTask() {
-
             const completed = row.dataset.completed !== "true";
 
             row.dataset.completed = String(completed);
 
             checkbox.setAttribute("aria-checked", String(completed));
-
             checkbox.classList.toggle("checked", completed);
 
-            if (taskName) {
-                taskName.classList.toggle("task-completed", completed);
-            }
+            taskName?.classList.toggle("task-completed", completed);
 
             if (status) {
                 status.textContent = completed
@@ -366,6 +404,12 @@ document.addEventListener("click", event => {
                 status.classList.toggle("status-completed", completed);
                 status.classList.toggle("status-todo", !completed);
                 status.classList.remove("status-progress");
+            }
+
+            if (row.dataset.taskId) {
+                store.updateTask(row.dataset.taskId, {
+                    completed
+                });
             }
 
             updateTaskCounters();
@@ -379,26 +423,130 @@ document.addEventListener("click", event => {
                 toggleTask();
             }
         });
-
     }
 
 
-    document.querySelectorAll(".task-checkbox").forEach(checkbox => {
+    /* =====================================
+       CREATE TASK ROW
+    ===================================== */
 
-        const row = checkbox.closest("tr");
+    function createTaskRow(task) {
+        const row = document.createElement("tr");
 
-        if (row) {
-            row.dataset.completed =
-                row.querySelector(".task-status")?.textContent.trim() === "Ukończone"
-                    ? "true"
-                    : "false";
+        const completed =
+            task.completed || task.status === "Ukończone";
+
+        row.dataset.taskId = task.id;
+        row.dataset.completed = String(completed);
+
+        // Nazwa zadania
+
+        const taskCell = document.createElement("td");
+
+        const taskName = document.createElement("div");
+        taskName.className = "task-name";
+
+        const checkbox = document.createElement("span");
+
+        checkbox.className = `task-checkbox${completed ? " checked" : ""}`;
+
+        const taskTitle = document.createElement("strong");
+        taskTitle.textContent = task.title;
+
+        taskTitle.classList.toggle("task-completed", completed);
+
+        taskName.append(checkbox, taskTitle);
+        taskCell.appendChild(taskName);
+
+        // Projekt
+
+        const projectCell = document.createElement("td");
+        projectCell.textContent = task.project || "—";
+
+        // Priorytet
+
+        const priorityCell = document.createElement("td");
+
+        const priorityBadge = document.createElement("span");
+
+        const priorityMap = {
+            "Wysoki": "priority-high",
+            "Średni": "priority-medium",
+            "Niski": "priority-low",
+            "high": "priority-high",
+            "medium": "priority-medium",
+            "low": "priority-low"
+        };
+
+        priorityBadge.className =
+            `priority ${priorityMap[task.priority] || "priority-medium"}`;
+
+        priorityBadge.textContent = task.priority || "Średni";
+
+        priorityCell.appendChild(priorityBadge);
+
+        // Termin
+
+        const dateCell = document.createElement("td");
+
+        if (task.date) {
+            const parsedDate = new Date(`${task.date}T12:00:00`);
+
+            dateCell.textContent = !isNaN(parsedDate.getTime())
+                ? parsedDate.toLocaleDateString("pl-PL", {
+                    day: "numeric",
+                    month: "short"
+                })
+                : task.date;
+
+        } else {
+            dateCell.textContent = "—";
         }
+
+        // Status
+
+        const statusCell = document.createElement("td");
+
+        const statusBadge = document.createElement("span");
+
+        statusBadge.className =
+            `task-status ${completed ? "status-completed" : "status-todo"}`;
+
+        statusBadge.textContent = completed
+            ? "Ukończone"
+            : "Do zrobienia";
+
+        statusCell.appendChild(statusBadge);
+
+        row.append(
+            taskCell,
+            projectCell,
+            priorityCell,
+            dateCell,
+            statusCell
+        );
 
         setupTaskCheckbox(checkbox);
 
-    });
+        return row;
+    }
 
-    updateTaskCounters();
+
+    /* =====================================
+       RENDER TASKS FROM STORE
+    ===================================== */
+
+    function renderTasks() {
+        const tasks = store.getState().tasks;
+
+        tasksTable.replaceChildren(
+            ...tasks.map(task => createTaskRow(task))
+        );
+
+        updateTaskCounters();
+    }
+
+    renderTasks();
 
 
     /* =====================================
@@ -460,7 +608,11 @@ document.addEventListener("click", event => {
                     </div>
 
                     <div class="dialog-actions">
-                        <button type="button" class="btn btn-secondary cancel-dialog">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary cancel-dialog"
+                        >
                             Anuluj
                         </button>
 
@@ -468,6 +620,7 @@ document.addEventListener("click", event => {
                             <i class="fa-solid fa-plus"></i>
                             Dodaj zadanie
                         </button>
+
                     </div>
 
                 </form>
@@ -500,75 +653,21 @@ document.addEventListener("click", event => {
                 low: "Niski"
             };
 
-            const priorityClasses = {
-                high: "priority-high",
-                medium: "priority-medium",
-                low: "priority-low"
-            };
+            // Zapis nowego zadania w Store
 
-            const row = document.createElement("tr");
+            const savedTask = store.addTask({
+                title,
+                project,
+                priority: priorityLabels[priority],
+                date
+            });
 
-            row.dataset.completed = "false";
+            // Wyświetlenie zadania
 
-            const taskCell = document.createElement("td");
-            const taskName = document.createElement("div");
-            taskName.className = "task-name";
-
-            const checkbox = document.createElement("span");
-            checkbox.className = "task-checkbox";
-
-            const taskTitle = document.createElement("strong");
-            taskTitle.textContent = title;
-
-            taskName.append(checkbox, taskTitle);
-            taskCell.appendChild(taskName);
-
-            const projectCell = document.createElement("td");
-            projectCell.textContent = project;
-
-            const priorityCell = document.createElement("td");
-            const priorityBadge = document.createElement("span");
-
-            priorityBadge.className = `priority ${priorityClasses[priority]}`;
-            priorityBadge.textContent = priorityLabels[priority];
-
-            priorityCell.appendChild(priorityBadge);
-
-            const dateCell = document.createElement("td");
-
-            if (date) {
-                const selectedDate = new Date(`${date}T12:00:00`);
-
-                dateCell.textContent = selectedDate.toLocaleDateString(
-                    "pl-PL",
-                    {
-                        day: "numeric",
-                        month: "short"
-                    }
-                );
-            } else {
-                dateCell.textContent = "—";
-            }
-
-            const statusCell = document.createElement("td");
-            const statusBadge = document.createElement("span");
-
-            statusBadge.className = "task-status status-todo";
-            statusBadge.textContent = "Do zrobienia";
-
-            statusCell.appendChild(statusBadge);
-
-            row.append(
-                taskCell,
-                projectCell,
-                priorityCell,
-                dateCell,
-                statusCell
+            tasksTable.prepend(
+                createTaskRow(savedTask)
             );
 
-            tasksTable.prepend(row);
-
-            setupTaskCheckbox(checkbox);
             updateTaskCounters();
 
             dialog.close();
@@ -594,19 +693,15 @@ document.addEventListener("click", event => {
         const taskRows = tasksTable.querySelectorAll("tr");
 
         taskRows.forEach(row => {
-
             const text = row.textContent.toLocaleLowerCase("pl");
 
             row.style.display = text.includes(query) ? "" : "none";
-
         });
 
         projectsList?.querySelectorAll(".project-item").forEach(project => {
-
             const text = project.textContent.toLocaleLowerCase("pl");
 
             project.style.display = text.includes(query) ? "" : "none";
-
         });
 
     });
@@ -655,7 +750,10 @@ document.addEventListener("click", event => {
 
                     <div class="dialog-actions">
 
-                        <button type="button" class="btn btn-secondary cancel-dialog">
+                        <button
+                            type="button"
+                            class="btn btn-secondary cancel-dialog"
+                        >
                             Anuluj
                         </button>
 
@@ -739,10 +837,8 @@ document.addEventListener("click", event => {
         const modifier = isMac ? event.metaKey : event.ctrlKey;
 
         if (modifier && event.key.toLowerCase() === "k") {
-
             event.preventDefault();
             searchInput?.focus();
-
         }
 
         if (event.key === "Escape") {
