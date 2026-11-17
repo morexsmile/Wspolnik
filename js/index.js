@@ -851,6 +851,25 @@ document.addEventListener("DOMContentLoaded", () => {
     /* =====================================
        INITIALIZATION
     ===================================== */
+   const currentDateElement = document.getElementById("currentDate");
+
+function updateCurrentDate() {
+    if (!currentDateElement) return;
+
+    const today = new Date();
+
+    const formattedDate = new Intl.DateTimeFormat("pl-PL", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    }).format(today);
+
+    currentDateElement.textContent =
+        formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+}
+
+updateCurrentDate();
 
     console.log("Wspólnik — aplikacja została uruchomiona.");
 
